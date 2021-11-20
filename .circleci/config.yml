@@ -58,6 +58,20 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - print_pipeline_id      
+
+  test-failure-job:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: circleci/node:13.8.0
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - run: exit 1
+      - run:
+          name: error
+          command: echo "hello error!"
+          when: on_fail           
        
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -70,3 +84,6 @@ workflows:
       - output-hello:
           requires:
             - save-hello
+      - test-failure-job:
+          requires:
+            - output-hello        
